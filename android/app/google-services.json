@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1079425479078",
+    "firebase_url": "https://pets-wallet.firebaseio.com",
+    "project_id": "pets-wallet",
+    "storage_bucket": "pets-wallet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1079425479078:android:fe7492d8f33d203a885f67",
+        "android_client_info": {
+          "package_name": "br.com.pets_wallet.pets_wallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1079425479078-sjam0md91i7vud1dchm6c9ev0i8fr448.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8Rt1HA2z4LwVIiGzKA8QY62UrIpo_t20"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1079425479078-sjam0md91i7vud1dchm6c9ev0i8fr448.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
