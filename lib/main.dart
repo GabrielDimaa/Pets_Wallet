@@ -11,11 +11,11 @@ class MyApp extends StatelessWidget {
 		return MaterialApp(
 			title: 'Pets Wallet',
 			theme: ThemeData(
-				primaryColor: Color(0xFF4464AD),
-				primaryColorDark: Color(0xFF883955),
-				primaryColorLight: Color(0xFFF4AFB4),
-				accentColor: Color(0xFFF5E960),
-				visualDensity: VisualDensity.adaptivePlatformDensity,
+				primaryColor: Color(0xFF9381FF),
+				primaryColorDark: Color(0xFF1E1A1D),
+				accentColor: Color(0xFFEF767A),
+				scaffoldBackgroundColor: Color(0xFFFCFCFC),
+				visualDensity: VisualDensity.adaptivePlatformDensity
 			),
 			debugShowCheckedModeBanner: false,
 			home: HomeScreen()
