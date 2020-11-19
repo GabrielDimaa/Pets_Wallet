@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pets_wallet/screens/home_screen.dart';
 
 void main() {
@@ -17,6 +18,11 @@ class MyApp extends StatelessWidget {
 				scaffoldBackgroundColor: Color(0xFFFCFCFC),
 				visualDensity: VisualDensity.adaptivePlatformDensity
 			),
+			localizationsDelegates: [
+				GlobalMaterialLocalizations.delegate,
+				GlobalWidgetsLocalizations.delegate
+			],
+			supportedLocales: [const Locale('pt', 'BR')],
 			debugShowCheckedModeBanner: false,
 			home: HomeScreen()
 		);

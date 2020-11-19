@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome_icons.dart';
 
-class FormScreen extends StatelessWidget {
+class FormScreen extends StatefulWidget {
+	@override
+	_FormScreenState createState() => _FormScreenState();
+}
 
-	Color _color;
+class _FormScreenState extends State<FormScreen> {
+	Color _primaryColor;
 
 	final _formKey = GlobalKey<FormState>();
 
 	final _nameController = TextEditingController();
-	final _dateController = TextEditingController();
+	var _dateController = new TextEditingController();
 	final _breedController = TextEditingController();
 	final _genderController = TextEditingController();
 	final _weightController = TextEditingController();
@@ -16,7 +20,7 @@ class FormScreen extends StatelessWidget {
 
 	@override
 	Widget build(BuildContext context) {
-		_color =  Theme.of(context).primaryColor;
+		_primaryColor =  Theme.of(context).primaryColor;
 		return Scaffold(
 			appBar: AppBar(
 				title: Text(""),
@@ -38,7 +42,7 @@ class FormScreen extends StatelessWidget {
 											style: TextStyle(
 												fontSize: 36.0, 
 												fontWeight: FontWeight.bold,
-												color: _color
+												color: _primaryColor
 											)
 										)
 									),
@@ -94,12 +98,63 @@ class FormScreen extends StatelessWidget {
 										error: "Cor não Informado!"
 									),
 									SizedBox(height: 20.0),
-									textFormField(
-										label: "Data de Nascimento",
-										controller: _colorController,
-										error: "Data não Informado!"
+									Container(
+										width: double.infinity,
+										child: Row(
+											mainAxisAlignment: MainAxisAlignment.spaceBetween,
+											children: <Widget>[
+												Expanded(
+													child:textFormField(
+														label: "Nascimento",
+														controller: _dateController,
+														icon: Icons.date_range,
+														error: "Data não Informado!",
+														enabled: false
+													),
+												),
+												Padding(
+													padding: EdgeInsets.only(left: 15.0),
+													child: RaisedButton(
+														onPressed: () => _dateCalender(context), // Refer step 3
+														child: Text("data",
+															style:
+																TextStyle(
+																	color: Colors.white, 
+																	fontWeight: FontWeight.bold,
+																	fontSize: 17.0
+																),
+														),
+														color: _primaryColor,
+													),
+												)
+											]
+										)
 									)
 								]
+							)
+						),
+						SizedBox(height: 25.0),
+						ButtonTheme(
+							minWidth: 200.0,
+							height: 50.0,
+							buttonColor: _primaryColor,
+							child: RaisedButton(
+								onPressed: () {},
+								child: Wrap(
+									crossAxisAlignment: WrapCrossAlignment.center,
+									children: [
+										Padding(
+											padding: EdgeInsets.only(right: 10.0),
+											child: Icon(Icons.save, color: Colors.white)
+										),
+										Text('Adicionar',
+											style: TextStyle(
+												color: Colors.white,
+												fontSize: 20.0
+											)
+										),
+									]
+								)
 							)
 						)
 					]
@@ -109,22 +164,23 @@ class FormScreen extends StatelessWidget {
 	}
 
 	Widget textFormField({String label, TextEditingController controller, 
-		String error, IconData icon, bool keyboard}) {
+		String error, IconData icon, bool keyboard, bool enabled}) {
 
 		return TextFormField(
 			keyboardType: keyboard != null ? TextInputType.number : TextInputType.text,
-			style: TextStyle(color: _color, fontSize: 17),
+			enabled: enabled != null ? enabled : true,
+			style: TextStyle(color: _primaryColor, fontSize: 17),
 			textAlign: TextAlign.center,
 			decoration: InputDecoration(
-				prefixIcon: Icon(icon, color: _color),
+				prefixIcon: Icon(icon, color: _primaryColor),
 				contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
 				labelText: label,
 				labelStyle: TextStyle(
-					color: _color.withOpacity(0.8),
+					color: _primaryColor.withOpacity(0.8),
 					fontSize: 18.0,
 				),
 				border: OutlineInputBorder(
-					borderSide: BorderSide(color: _color, width: 3.0),
+					borderSide: BorderSide(color: _primaryColor, width: 3.0),
 					borderRadius: BorderRadius.all(Radius.circular(15.0)),
 				),
 				enabledBorder: OutlineInputBorder(
@@ -132,7 +188,7 @@ class FormScreen extends StatelessWidget {
 					borderRadius: BorderRadius.all(Radius.circular(15.0))
 				),
 				focusedBorder: OutlineInputBorder(
-					borderSide: BorderSide(color: _color, width: 3.0),
+					borderSide: BorderSide(color: _primaryColor, width: 3.0),
 					borderRadius: BorderRadius.all(Radius.circular(15.0))
 				),
 			),
@@ -140,6 +196,36 @@ class FormScreen extends StatelessWidget {
 				return text.isEmpty ? error : null;
 			},
 			controller: controller
+		);
+	}
+
+	void _dateCalender(BuildContext context) async {
+		final DateTime _selectedDate = DateTime.now();
+
+		final DateTime picked = await showDatePicker(
+			context: context,
+			initialDate: _selectedDate, // Refer step 1
+			firstDate: DateTime(2000),
+			lastDate: _selectedDate,
+		);
+		if (picked != null && picked != _selectedDate) {
+			setState(() {
+				_formatDate(picked.toString().substring(0, 10));
+			});
+		}
+	}
+
+	void _formatDate(String data) {
+		String year = data.substring(0, 4);
+		String month = data.substring(5, 7);
+		String day = data.substring(8, 10);
+		String dataFormated = "${day}/${month}/${year}";
+		_dateController.text = dataFormated;
+		_dateController.value = TextEditingValue(
+			text: dataFormated,
+			selection: TextSelection.fromPosition(
+				TextPosition(offset: dataFormated.length),
+			),
 		);
 	}
 }

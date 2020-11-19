@@ -28,6 +28,9 @@ dependencies:
   fluttericon: ^1.0.7
   mask_shifter: ^0.1.0
 
+  flutter_localizations:
+    sdk: flutter
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
