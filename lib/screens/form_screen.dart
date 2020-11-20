@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome_icons.dart';
+import 'package:fluttericon/elusive_icons.dart';
 
 class FormScreen extends StatefulWidget {
 	@override
@@ -7,16 +8,34 @@ class FormScreen extends StatefulWidget {
 }
 
 class _FormScreenState extends State<FormScreen> {
+
 	Color _primaryColor;
 
 	final _formKey = GlobalKey<FormState>();
 
+	int _radioValue = 0;
+	String _radioGender = "Macho";
+
 	final _nameController = TextEditingController();
-	var _dateController = new TextEditingController();
+	var _dateController = TextEditingController();
 	final _breedController = TextEditingController();
-	final _genderController = TextEditingController();
 	final _weightController = TextEditingController();
 	final _colorController = TextEditingController();
+
+	void _handleRadioValueChange(int value) {
+		setState(() {
+			_radioValue = value;
+
+			switch (_radioValue) {
+				case 0:
+					_radioGender = "Macho";
+				break;
+				case 1:
+					_radioGender = "Fêmea";
+				break;
+			}
+		});
+	}
 
 	@override
 	Widget build(BuildContext context) {
@@ -69,11 +88,50 @@ class _FormScreenState extends State<FormScreen> {
 										error: "Nome não Informado!"
 									),
 									SizedBox(height: 20.0),
-									textFormField(
-										label: "Sexo",
-										controller: _nameController,
-										icon: FontAwesome.transgender,
-										error: "Sexo não Informado!"
+									Row(
+										mainAxisAlignment: MainAxisAlignment.spaceBetween,
+										children: <Widget>[
+											Row(
+												children: <Widget>[
+													Radio(
+														value: 0,
+														groupValue: _radioValue,
+														onChanged: _handleRadioValueChange,
+														activeColor: _primaryColor,
+													),
+													Padding(
+														padding: EdgeInsets.only(right: 10.0),
+														child: Icon(Elusive.male, color: _primaryColor, size: 18.0)
+													),
+													Text('Macho',
+														style: TextStyle(
+															fontSize: 18.0,
+															color: _primaryColor.withOpacity(0.8)
+														),
+													),
+												]
+											),
+											Row(
+												children: <Widget>[
+													Radio(
+														value: 1,
+														groupValue: _radioValue,
+														onChanged: _handleRadioValueChange,
+														activeColor: _primaryColor,
+													),
+													Padding(
+														padding: EdgeInsets.only(right: 10.0),
+														child: Icon(Elusive.female, color: _primaryColor, size: 18.0)
+													),
+													Text('Fêmea',
+														style: TextStyle(
+															fontSize: 18.0,
+															color: _primaryColor.withOpacity(0.8)
+														),
+													),
+												]
+											),
+										]
 									),
 									SizedBox(height: 20.0),
 									textFormField(
@@ -84,7 +142,7 @@ class _FormScreenState extends State<FormScreen> {
 									),
 									SizedBox(height: 20.0),
 									textFormField(
-										label: "Peso",
+										label: "Peso (Kg)",
 										controller: _nameController,
 										icon: FontAwesome.heartbeat,
 										keyboard: true,
@@ -92,7 +150,7 @@ class _FormScreenState extends State<FormScreen> {
 									),
 									SizedBox(height: 20.0),
 									textFormField(
-										label: "Coloração",
+										label: "Coloração do Pelo",
 										controller: _colorController,
 										icon: Icons.timelapse,
 										error: "Cor não Informado!"
@@ -133,7 +191,7 @@ class _FormScreenState extends State<FormScreen> {
 								]
 							)
 						),
-						SizedBox(height: 25.0),
+						SizedBox(height: 40.0),
 						ButtonTheme(
 							minWidth: 200.0,
 							height: 50.0,
