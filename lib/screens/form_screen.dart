@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:fluttericon/elusive_icons.dart';
+import 'package:fluttericon/rpg_awesome_icons.dart';
+import 'package:pets_wallet/data/pet_data.dart';
+import 'package:pets_wallet/screens/home_screen.dart';
 
 class FormScreen extends StatefulWidget {
 	@override
@@ -13,8 +18,11 @@ class _FormScreenState extends State<FormScreen> {
 
 	final _formKey = GlobalKey<FormState>();
 
-	int _radioValue = 0;
-	String _radioGender = "Macho";
+	int _radioValueGender = 0;
+	String _radioGender = "Macho";	
+
+	int _radioValueType = 0;
+	String _radioType = "Cachorro";
 
 	final _nameController = TextEditingController();
 	var _dateController = TextEditingController();
@@ -22,16 +30,47 @@ class _FormScreenState extends State<FormScreen> {
 	final _weightController = TextEditingController();
 	final _colorController = TextEditingController();
 
-	void _handleRadioValueChange(int value) {
-		setState(() {
-			_radioValue = value;
+	void _insertPet() async {
+		Pet pet = Pet();
+		pet.name = _nameController.text;
+		pet.type = _radioType;
+		pet.gender = _radioGender;
+		pet.weight = _weightController.text;
+		pet.color = _colorController.text;
+		pet.date = _dateController.text;
+		pet.breed = _breedController.text;
 
-			switch (_radioValue) {
+		await Firebase.initializeApp();
+		await FirebaseFirestore.instance.collection('pets').add(pet.toMap());
+
+		Navigator.of(context).pop();
+	}
+
+	void _handleRadioGender(int value) {
+		setState(() {
+			_radioValueGender = value;
+
+			switch (_radioValueGender) {
 				case 0:
 					_radioGender = "Macho";
 				break;
 				case 1:
 					_radioGender = "Fêmea";
+				break;
+			}
+		});
+	}
+
+	void _handleRadioType(int value) {
+		setState(() {
+			_radioValueType = value;
+
+			switch (_radioValueType) {
+				case 0:
+					_radioType = "Cachorro";
+				break;
+				case 1:
+					_radioType = "Gato";
 				break;
 			}
 		});
@@ -91,46 +130,39 @@ class _FormScreenState extends State<FormScreen> {
 									Row(
 										mainAxisAlignment: MainAxisAlignment.spaceBetween,
 										children: <Widget>[
-											Row(
-												children: <Widget>[
-													Radio(
-														value: 0,
-														groupValue: _radioValue,
-														onChanged: _handleRadioValueChange,
-														activeColor: _primaryColor,
-													),
-													Padding(
-														padding: EdgeInsets.only(right: 10.0),
-														child: Icon(Elusive.male, color: _primaryColor, size: 18.0)
-													),
-													Text('Macho',
-														style: TextStyle(
-															fontSize: 18.0,
-															color: _primaryColor.withOpacity(0.8)
-														),
-													),
-												]
+											_radioButton(
+												textGender: "Cachorro",
+												value: 0,
+												radioValue: _radioValueType,
+												icon: Elusive.guidedog,
+												function: _handleRadioType
 											),
-											Row(
-												children: <Widget>[
-													Radio(
-														value: 1,
-														groupValue: _radioValue,
-														onChanged: _handleRadioValueChange,
-														activeColor: _primaryColor,
-													),
-													Padding(
-														padding: EdgeInsets.only(right: 10.0),
-														child: Icon(Elusive.female, color: _primaryColor, size: 18.0)
-													),
-													Text('Fêmea',
-														style: TextStyle(
-															fontSize: 18.0,
-															color: _primaryColor.withOpacity(0.8)
-														),
-													),
-												]
+											_radioButton(
+												textGender: "Gato",
+												value: 1,
+												radioValue: _radioValueType,
+												icon: RpgAwesome.cat,
+												function: _handleRadioType
+											)
+										]
+									),
+									Row(
+										mainAxisAlignment: MainAxisAlignment.spaceBetween,
+										children: <Widget>[
+											_radioButton(
+												textGender: "Macho",
+												value: 0,
+												radioValue: _radioValueGender,
+												icon: Elusive.male,
+												function: _handleRadioGender
 											),
+											_radioButton(
+												textGender: "Fêmea",
+												value: 1,
+												radioValue: _radioValueGender,
+												icon: Elusive.female,
+												function: _handleRadioGender
+											)
 										]
 									),
 									SizedBox(height: 20.0),
@@ -143,7 +175,7 @@ class _FormScreenState extends State<FormScreen> {
 									SizedBox(height: 20.0),
 									textFormField(
 										label: "Peso (Kg)",
-										controller: _nameController,
+										controller: _weightController,
 										icon: FontAwesome.heartbeat,
 										keyboard: true,
 										error: "Peso não Informado!"
@@ -197,7 +229,11 @@ class _FormScreenState extends State<FormScreen> {
 							height: 50.0,
 							buttonColor: _primaryColor,
 							child: RaisedButton(
-								onPressed: () {},
+								onPressed: () {
+									if (_formKey.currentState.validate()) {
+										_insertPet();
+									}
+								},
 								child: Wrap(
 									crossAxisAlignment: WrapCrossAlignment.center,
 									children: [
@@ -228,7 +264,7 @@ class _FormScreenState extends State<FormScreen> {
 			keyboardType: keyboard != null ? TextInputType.number : TextInputType.text,
 			enabled: enabled != null ? enabled : true,
 			style: TextStyle(color: _primaryColor, fontSize: 17),
-			textAlign: TextAlign.center,
+			textAlign: TextAlign.start,
 			decoration: InputDecoration(
 				prefixIcon: Icon(icon, color: _primaryColor),
 				contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -254,6 +290,29 @@ class _FormScreenState extends State<FormScreen> {
 				return text.isEmpty ? error : null;
 			},
 			controller: controller
+		);
+	}
+
+	Widget _radioButton({String textGender, int value, Function function, IconData icon, int radioValue}) {
+		return Row(
+			children: <Widget>[
+				Radio(
+					value: value,
+					groupValue: radioValue,
+					onChanged: function,
+					activeColor: _primaryColor,
+				),
+				Padding(
+					padding: EdgeInsets.only(right: 10.0),
+					child: Icon(icon, color: _primaryColor, size: 18.0)
+				),
+				Text(textGender,
+					style: TextStyle(
+						fontSize: 18.0,
+						color: _primaryColor.withOpacity(0.8)
+					),
+				),
+			]
 		);
 	}
 
