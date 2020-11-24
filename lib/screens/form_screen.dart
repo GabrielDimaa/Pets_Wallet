@@ -16,6 +16,18 @@ class _FormScreenState extends State<FormScreen> {
 
 	Color _primaryColor;
 
+	final List<String> _imagesDog = List<String>.generate(
+		7,
+		(i) => "dog${i+1}"
+	);
+
+	final List<String> _imagesCat = List<String>.generate(
+		4,
+		(i) => "cat${i+1}"
+	);
+
+	String _imageSelected;
+
 	final _formKey = GlobalKey<FormState>();
 
 	int _radioValueGender = 0;
@@ -32,6 +44,7 @@ class _FormScreenState extends State<FormScreen> {
 
 	void _insertPet() async {
 		Pet pet = Pet();
+
 		pet.name = _nameController.text;
 		pet.type = _radioType;
 		pet.gender = _radioGender;
@@ -40,10 +53,24 @@ class _FormScreenState extends State<FormScreen> {
 		pet.date = _dateController.text;
 		pet.breed = _breedController.text;
 
+		if(pet.type.toLowerCase() == "cachorro") {
+			if(_imageSelected.contains("dog"))
+				pet.image = _imageSelected;
+			else
+				pet.image = "dog1.png";
+		} else {
+			if(_imageSelected.contains("cat"))
+				pet.image = _imageSelected;
+			else
+				pet.image = "cat1.png";
+		}
+
 		await Firebase.initializeApp();
 		await FirebaseFirestore.instance.collection('pets').add(pet.toMap());
 
-		Navigator.of(context).pop();
+		Navigator.of(context).push(
+			MaterialPageRoute(builder: (context) => HomeScreen())
+		);
 	}
 
 	void _handleRadioGender(int value) {
@@ -223,7 +250,45 @@ class _FormScreenState extends State<FormScreen> {
 								]
 							)
 						),
-						SizedBox(height: 40.0),
+						Container(
+							height: 100.0,
+							margin: EdgeInsets.symmetric(vertical: 30.0),
+							child: ListView.builder(
+								scrollDirection: Axis.horizontal,
+								itemCount: _radioType.toLowerCase() == "cachorro" ? 
+									_imagesDog.length :
+									_imagesCat.length,
+								itemBuilder: (context, index) {
+									List<String> images;
+									if(_radioType.toLowerCase() == "cachorro") {
+										images = _imagesDog;
+									} else {
+										images = _imagesCat;
+									}
+									return Container(
+										decoration: BoxDecoration(
+											border: Border.all(
+												color: _imageSelected == "${images[index]}.png" ? _primaryColor : Colors.transparent,
+												width: 2.0,
+											),
+											borderRadius: BorderRadius.circular(7.0)
+										),
+										child: InkWell(
+											borderRadius: BorderRadius.circular(10.0),
+											child: Image(
+												width: 80.0,
+												image: AssetImage('images/${images[index]}.png')
+											),
+											onTap: () {
+												setState(() {
+													_imageSelected = "${images[index]}.png";
+												});
+											}
+										)
+									);
+								}
+							)
+						),
 						ButtonTheme(
 							minWidth: 200.0,
 							height: 50.0,
@@ -324,6 +389,19 @@ class _FormScreenState extends State<FormScreen> {
 			initialDate: _selectedDate, // Refer step 1
 			firstDate: DateTime(2000),
 			lastDate: _selectedDate,
+			builder: (context, child) {
+				return Theme(
+					child: child,
+					data: ThemeData(
+						colorScheme: ColorScheme.light(
+							primary: _primaryColor,
+							onPrimary: Colors.white,
+							onSurface: Colors.black,
+						),
+						dialogBackgroundColor:Colors.white
+					),
+				);
+			}
 		);
 		if (picked != null && picked != _selectedDate) {
 			setState(() {
@@ -336,7 +414,7 @@ class _FormScreenState extends State<FormScreen> {
 		String year = data.substring(0, 4);
 		String month = data.substring(5, 7);
 		String day = data.substring(8, 10);
-		String dataFormated = "${day}/${month}/${year}";
+		String dataFormated = "$day/$month/$year";
 		_dateController.text = dataFormated;
 		_dateController.value = TextEditingValue(
 			text: dataFormated,

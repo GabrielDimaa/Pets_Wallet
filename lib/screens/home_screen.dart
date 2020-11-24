@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pets_wallet/screens/form_screen.dart';
 import 'package:pets_wallet/tiles/item_appbar.dart';
+import 'package:pets_wallet/widgets/custom_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
 	@override
@@ -31,27 +32,7 @@ class HomeScreen extends StatelessWidget {
 			body: Stack(
 				children: <Widget>[
 					Container(color: Theme.of(context).scaffoldBackgroundColor),
-					CustomScrollView(
-						slivers: <Widget>[
-							SliverAppBar(
-								title: Text("Pets Wallet",
-									style: TextStyle(fontSize: 23.0)
-								),
-								centerTitle: true,
-								expandedHeight: 160.0,
-								floating: false,
-								flexibleSpace: FlexibleSpaceBar(
-									titlePadding: EdgeInsetsDirectional.only(bottom: 0),
-									title: Container(
-										padding: EdgeInsets.all(0.0),
-										height: 60.0,
-										child: Image(image: AssetImage('images/gatoAppBar.png'))
-									),
-									centerTitle: true
-								)
-							)
-						]
-					)
+					CustomScroll()
 				]
 			)
 		);

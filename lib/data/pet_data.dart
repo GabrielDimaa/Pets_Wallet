@@ -1,9 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Pet {
+
 	Pet();
 
-	String id;
 	String name;
 	String type;
 	String gender;
@@ -11,29 +9,30 @@ class Pet {
 	String color;
 	String date;
 	String breed;
+	String image;
 	
 
-	Pet.fromDocument(DocumentSnapshot snapshot) {
-		id = snapshot.id;
-		name = snapshot.data()['name'];
-		type = snapshot.data()['type'];
-		gender = snapshot.data()['gender'];
-		weight = snapshot.data()['weight'];
-		color = snapshot.data()['color'];
-		date = snapshot.data()['date'];
-		breed = snapshot.data()['breed'];
+	Pet.fromMap(Map<String, dynamic> data) {
+		name = data['name'];
+		type = data['type'];
+		gender = data['gender'];
+		weight = data['weight'];
+		color = data['color'];
+		date = data['date'];
+		breed = data['breed'];
+		image = data['image'];
 	}
 
 	Map<String, dynamic> toMap() {
 		return {
-			'id': id,
 			'name': name,
 			'type': type,
 			'gender': gender,
 			'weight': weight,
 			'color': color,
 			'date': date,
-			'breed': breed
+			'breed': breed,
+			'image': image
 		};
 	}
 }
