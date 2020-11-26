@@ -4,7 +4,9 @@ import 'package:pets_wallet/screens/pet_screen.dart';
 class CardPets extends StatefulWidget {
 	Map<String, dynamic> snapshot;
 
-	CardPets(this.snapshot);
+  String documentID;
+
+	CardPets(this.snapshot, this.documentID);
 
 	@override
 	_CardPetsState createState() => _CardPetsState();
@@ -41,7 +43,7 @@ class _CardPetsState extends State<CardPets> {
 		return GestureDetector(
 			onTap: () {
 				Navigator.of(context).push(
-					MaterialPageRoute(builder: (context) => PetScreen(widget.snapshot))
+					MaterialPageRoute(builder: (context) => PetScreen(widget.snapshot, widget.documentID))
 				);
 			},
 			child: Container(

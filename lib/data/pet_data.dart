@@ -10,6 +10,13 @@ class Pet {
 	String date;
 	String breed;
 	String image;
+
+	bool puppy = false;
+	bool polivalente70 = false;
+	bool polivalente100 = false;
+	bool gripe = false;
+	bool giardia = false;
+	bool rabica = false;
 	
 
 	Pet.fromMap(Map<String, dynamic> data) {
@@ -21,6 +28,12 @@ class Pet {
 		date = data['date'];
 		breed = data['breed'];
 		image = data['image'];
+		puppy = data['puppy'];
+		polivalente70 = data['polivalente70'];
+		polivalente100 = data['polivalente100'];
+		gripe = data['gripe'];
+		giardia = data['giardia'];
+		rabica = data['rabica'];
 	}
 
 	Map<String, dynamic> toMap() {
@@ -32,7 +45,13 @@ class Pet {
 			'color': color,
 			'date': date,
 			'breed': breed,
-			'image': image
+			'image': image,
+			'puppy': puppy,
+			'polivalente70': polivalente70,
+			'polivalente100': polivalente100,
+			'gripe': gripe,
+			'giardia': giardia,
+			'rabica': rabica
 		};
 	}
 }

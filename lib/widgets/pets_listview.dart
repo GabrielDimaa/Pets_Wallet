@@ -12,7 +12,7 @@ class PetsList extends StatelessWidget {
 					return Center(child: CircularProgressIndicator());
 				else {
 					var dividedTiles = ListTile.divideTiles(tiles: snapshot.data.docs.map<Widget>((doc) {
-							return CardPets(doc.data());
+							return CardPets(doc.data(), doc.documentID);
 						}).toList(),
 						color: Colors.transparent).toList();
 						
