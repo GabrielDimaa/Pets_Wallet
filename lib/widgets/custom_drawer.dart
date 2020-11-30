@@ -1,15 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:pets_wallet/widgets/pets_listview.dart';
 
-class CustomScroll extends StatelessWidget {
-  	@override
+class CustomScroll extends StatefulWidget {
+	@override
+	_CustomScrollState createState() => _CustomScrollState();
+}
+
+class _CustomScrollState extends State<CustomScroll> {
+
+	Widget _appBarTitle = Text("Pets Wallet",
+		style: TextStyle(fontSize: 23.0)
+	);
+
+	Icon _icon = Icon(
+		Icons.search,
+		color: Colors.white,
+	);
+
+	final TextEditingController _controllerSearch = new TextEditingController();
+
+	bool _isSearching = false;
+	String _searchText = "";
+
+	@override
 	Widget build(BuildContext context) {
 		return CustomScrollView(
 			slivers: <Widget>[
 				SliverAppBar(
-					title: Text("Pets Wallet",
-						style: TextStyle(fontSize: 23.0)
-					),
+					title: _appBarTitle,
 					centerTitle: true,
 					expandedHeight: 160.0,
 					floating: false,
@@ -21,43 +39,70 @@ class CustomScroll extends StatelessWidget {
 							child: Image(image: AssetImage('images/dogAppBar.png'))
 						),
 						centerTitle: true
-					)
+					),
+					actions: <Widget>[
+						IconButton(
+							icon: _icon,
+							onPressed: () {
+								setState(() {
+									if(_icon.icon == Icons.search) {
+										_icon = Icon(
+											Icons.close,
+											color: Colors.white,
+										);
+										_appBarTitle = TextField(
+											controller: _controllerSearch,
+											style: TextStyle(color: Colors.white),
+											decoration: InputDecoration(
+												enabledBorder: OutlineInputBorder(
+													borderSide: BorderSide(color: Colors.transparent),
+												),
+												filled: true,
+												prefixIcon: Icon(Icons.search, color: Colors.white),
+												hintText: "Pesquise seu Pet",
+												hintStyle: TextStyle(color: Colors.grey[100])
+											),
+											onChanged: (value) {
+												_searchText = value;
+												setState((){});
+											}
+										);
+										_handleSearchStart();
+									} else {
+										_handleSearchReset();
+									}
+								});
+							}
+						)
+					]
 				),
 				SliverToBoxAdapter(
-					child: Column(
-						children: <Widget>[
-							Padding(
-								padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 30.0),
-								child: Row(
-									mainAxisAlignment: MainAxisAlignment.center,
-									children: <Widget>[
-										_buttonSliver("Todos", (){}),
-										SizedBox(width: 17.0),
-										_buttonSliver("Dogs", (){}),
-										SizedBox(width: 17.0),
-										_buttonSliver("Cats", (){})
-									]
-								)
-							),
-							PetsList()
-						]
-					),
+					child: PetsList(_searchText)
 				)
 			]
 		);
 	}
 
-	Widget _buttonSliver(String text, Function onPressed) {
-		return FlatButton(
-			onPressed: onPressed,
-			padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-			child: Text(text,
-				style: TextStyle(
-					fontSize: 18.0
-				)
-			),
-			color: Colors.deepPurple[200],
-			textColor: Colors.white
-		);
+	void _handleSearchStart() {
+		setState(() {
+			_isSearching = true;
+		});
+	}
+
+	void _handleSearchReset() {
+		setState(() {
+			_appBarTitle = Text("Pets Wallet",
+				style: TextStyle(fontSize: 23.0)
+			);
+
+			_icon = Icon(
+				Icons.search,
+				color: Colors.white,
+			);
+
+			_isSearching = false;
+			_controllerSearch.clear();
+			_searchText = "";
+		});
 	}
 }
