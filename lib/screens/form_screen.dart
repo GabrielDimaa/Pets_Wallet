@@ -68,9 +68,7 @@ class _FormScreenState extends State<FormScreen> {
 		await Firebase.initializeApp();
 		await FirebaseFirestore.instance.collection('pets').add(pet.toMap());
 
-		Navigator.of(context).push(
-			MaterialPageRoute(builder: (context) => HomeScreen())
-		);
+		Navigator.of(context).pop();
 	}
 
 	void _handleRadioGender(int value) {

@@ -2,9 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttericon/elusive_icons.dart';
 import 'package:fluttericon/rpg_awesome_icons.dart';
-import 'package:pets_wallet/screens/form_screen.dart';
 import 'package:pets_wallet/screens/home_screen.dart';
-import 'package:pets_wallet/tiles/item_appbar.dart';
 import 'package:fluttericon/font_awesome_icons.dart';
 
 class PetScreen extends StatefulWidget {
@@ -85,33 +83,6 @@ class _PetScreenState extends State<PetScreen> {
 						}
 					)
 				]
-			),
-			bottomNavigationBar: BottomAppBar(
-				elevation: 0,
-				color: Color(0xFF493657),
-				child: Container(
-					decoration: BoxDecoration(
-						color: Theme.of(context).primaryColor,
-						borderRadius: BorderRadius.circular(60)
-					),
-					margin: EdgeInsets.only(left: 25.0, right: 25.0, bottom: 11.0),
-					child: Row(
-						mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-						children: <Widget>[
-							ItemAppBar(icon: Icons.home, onTap: () {
-								Navigator.of(context).push(
-									MaterialPageRoute(builder: (context) => HomeScreen())
-								);
-							}),
-							ItemAppBar(icon: Icons.add_circle, isHigh: true, onTap: () {
-								Navigator.of(context).push(
-									MaterialPageRoute(builder: (context) => FormScreen())
-								);
-							}),
-							ItemAppBar(icon: Icons.search)
-						]
-					)
-				)
 			),
 			body: SingleChildScrollView(
 				child: Column(
@@ -365,10 +336,9 @@ class _PetScreenState extends State<PetScreen> {
 							)),
 							onPressed: () {
 								FirebaseFirestore.instance.collection('pets')
-									.doc(widget.documentID);
-								Navigator.of(context).push(
-									MaterialPageRoute(builder: (context) => HomeScreen())
-								);
+									.doc(widget.documentID).delete();
+								Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+									builder: (context) => HomeScreen()), (Route<dynamic> route) => false);
 							}
 						),
 						FlatButton(

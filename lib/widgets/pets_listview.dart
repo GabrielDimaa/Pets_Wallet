@@ -27,7 +27,7 @@ class _PetsListState extends State<PetsList> {
 				if(!snapshot.hasData)
 					return Center(child: CircularProgressIndicator());
 				else {
-					if(!widget.teste.isEmpty) {
+					if(widget.teste.isNotEmpty) {
 						_firebaseController = "todos";
 						_dividedTiles = ListTile.divideTiles(tiles: snapshot.data.docs.map<Widget>((doc) {
 							var docData = doc.data();

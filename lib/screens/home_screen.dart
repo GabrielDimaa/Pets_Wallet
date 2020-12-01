@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:pets_wallet/screens/form_screen.dart';
+import 'package:pets_wallet/screens/vaccine_screen.dart';
 import 'package:pets_wallet/tiles/item_appbar.dart';
 import 'package:pets_wallet/widgets/custom_drawer.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+	@override
+	_HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+	int _pageSelected = 0;
+
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
@@ -18,21 +26,30 @@ class HomeScreen extends StatelessWidget {
 					child: Row(
 						mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 						children: <Widget>[
-							ItemAppBar(icon: Icons.home),
-							ItemAppBar(icon: Icons.add_circle, isHigh: true, onTap: () {
-								Navigator.of(context).push(
+							ItemAppBar(icon: Icons.home, onTap: () {
+								setState(() => _pageSelected = 0);
+							}),
+							ItemAppBar(icon: Icons.add_circle, isHigh: true, onTap: () async {
+								await Navigator.of(context).push(
 									MaterialPageRoute(builder: (context) => FormScreen())
 								);
+								setState((){});
 							}),
-							ItemAppBar(icon: Icons.search)
+							ItemAppBar(icon: Icons.date_range, onTap: () {
+								setState(() => _pageSelected = 1);
+							})
 						]
 					)
 				)
 			),
-			body: Stack(
+			body: IndexedStack(
+				index: _pageSelected,
 				children: <Widget>[
-					Container(color: Theme.of(context).scaffoldBackgroundColor),
-					CustomScroll()
+					Container(
+						color: Theme.of(context).scaffoldBackgroundColor,
+						child: CustomScroll()
+					),
+					VaccineScreen()
 				]
 			)
 		);
