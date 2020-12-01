@@ -29,7 +29,7 @@
 
 ## :zap: Funcionalidades
 <p align="justify"> 
-  A Aplicação permite que o usuário insira um pet, de forma que defina a data de nascimento, peso, cor, raça, e outras informações.
+  A aplicação permite que o usuário insira um pet, de forma que defina a data de nascimento, peso, cor, raça, e outras informações.
 	De acordo com data de nascimento o aplicativo vai calcular as datas de vacinações e na tela do cãozinho poderá selecionar as vacinas que ele já tomou.
   O usuário tem uma tela que mostra todos os pets que ainda faltam tomar vacinas em uma lista ordenada pelas datas.
 </p>
